@@ -1,0 +1,48 @@
+package com.taskmanagement.taskmanagerproject.advice;
+
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.*;
+import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class AdviceException {
+    /*
+     * @ResponseStatus(HttpStatus.BAD_REQUEST)
+     * 
+     * @ExceptionHandler(CustomValidationException.class)
+     * public Map<String, String>
+     * handleInvalidArgument(MethodArgumentNotValidException ex) {
+     * Map<String, String> errorMap = new HashMap<>();
+     * ex.getBindingResult().getFieldErrors().forEach(error -> {
+     * errorMap.put(error.getField(), error.getDefaultMessage());
+     * });
+     * return errorMap;
+     * }
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        List<String> errors = ex.getBindingResult().getFieldErrors()
+                .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, List<String>> getErrorsMap(List<String> errors) {
+        Map<String, List<String>> errorResponse = new HashMap<>();
+        errorResponse.put("errors", errors);
+        return errorResponse;
+    }
+
+    @ExceptionHandler(CustomNotFoundException.class)
+    public Map<String, String> handleBusinessException(CustomNotFoundException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
+}

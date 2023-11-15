@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.taskmanagement.taskmanagerproject.dao.Dao;
 import com.taskmanagement.taskmanagerproject.entity.User;
+import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;
 import com.taskmanagement.taskmanagerproject.repository.UserRepository;
 
 @Service
@@ -36,19 +37,25 @@ public class UserService implements Dao<User> {
 
     @Override
     public User delete(int id) {
-        User temp = userRepository.findById(id).get();
+        User temp = userRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
         return temp;
     }
 
     @Override
     public User findById(int id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("User not found with ID: " + id));
     }
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        List<User> userList = userRepository.findAll();
+        if (userList.isEmpty()) {
+            throw new CustomNotFoundException("No users found");
+        }
+        return userList;
     }
 
 }
