@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.taskmanagement.taskmanagerproject.dao.Dao;
 import com.taskmanagement.taskmanagerproject.entity.Task;
+import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;
 import com.taskmanagement.taskmanagerproject.repository.TaskRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class TaskService implements Dao<Task> {
     }
 
     @Override
-    public Optional<Task> update(int id, Task o) {
+    public Task update(int id, Task o) {
         return taskRepository.findById(id).map((task) -> {
             task.setLabel(o.getLabel());
             task.setStatus(o.getStatus());
@@ -32,25 +33,30 @@ public class TaskService implements Dao<Task> {
             task.setDate_fin(o.getDate_fin());
             task.setStatus(o.getStatus());
             return taskRepository.save(task);
-
-        });
+        }).orElseThrow(() -> new CustomNotFoundException("Task Not found with this ID : " + id));
     }
 
     @Override
     public Task delete(int id) {
-        Task temp = taskRepository.findById(id).get();
+        Task temp = taskRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Task not found with ID: " + id));
+        ;
         taskRepository.deleteById(id);
         return temp;
     }
 
     @Override
     public Task findById(int id) {
-        return taskRepository.findById(id).get();
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Task not found with ID: " + id));
     }
 
     @Override
     public List<Task> findAll() {
-        return taskRepository.findAll();
+        if (!taskRepository.findAll().isEmpty()) {
+            return taskRepository.findAll();
+        }
+        throw new CustomNotFoundException("Tasks list is empty for now");
     }
 
 }

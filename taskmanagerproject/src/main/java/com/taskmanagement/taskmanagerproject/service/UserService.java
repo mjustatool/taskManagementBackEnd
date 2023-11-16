@@ -1,10 +1,7 @@
 package com.taskmanagement.taskmanagerproject.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.taskmanagement.taskmanagerproject.dao.Dao;
 import com.taskmanagement.taskmanagerproject.entity.User;
 import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;
@@ -24,7 +21,7 @@ public class UserService implements Dao<User> {
     }
 
     @Override
-    public Optional<User> update(int id, User o) {
+    public User update(int id, User o) {
         return userRepository.findById(id).map((user) -> {
             user.setNom(o.getNom());
             user.setPrenom(o.getPrenom());
@@ -32,7 +29,7 @@ public class UserService implements Dao<User> {
             user.setUsername(o.getUsername());
             user.setPassword(o.getPassword());
             return userRepository.save(user);
-        });
+        }).orElseThrow(() -> new CustomNotFoundException("User not found with ID : " + id));
     }
 
     @Override

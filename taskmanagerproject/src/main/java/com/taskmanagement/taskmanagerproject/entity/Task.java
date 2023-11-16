@@ -2,7 +2,7 @@ package com.taskmanagement.taskmanagerproject.entity;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,14 +27,14 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotNull(message = "Date Debut cannot be null")
+    @Column(nullable = false)
     private LocalDate date_debut;
-    @NotNull(message = "Date Fin cannot be null")
+    @Column(nullable = false)
     private LocalDate date_fin;
-    @NotNull(message = "Task status cannot be null")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
-    @NotNull(message = "Label cannot be null")
+    @Column(nullable = false)
     private String label;
     @ManyToOne
     @JoinColumn(name = "user_id")
