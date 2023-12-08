@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.*;
 import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,13 @@ public class AdviceException {
 
     @ExceptionHandler(CustomNotFoundException.class)
     public Map<String, String> handleBusinessException(CustomNotFoundException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public Map<String, String> handleBusinessException(EntityNotFoundException ex) {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", ex.getMessage());
         return errorMap;

@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserDto {
-        int id;
         @NotNull(message = "Nom cannot be null")
         String nom;
         @NotNull(message = "Prenom cannot be null")

@@ -1,10 +1,7 @@
 package com.taskmanagement.taskmanagerproject.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.taskmanagement.taskmanagerproject.dao.Dao;
 import com.taskmanagement.taskmanagerproject.entity.Task;
 import com.taskmanagement.taskmanagerproject.exception.CustomNotFoundException;

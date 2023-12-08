@@ -15,7 +15,7 @@ import com.taskmanagement.taskmanagerproject.service.TaskService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired
